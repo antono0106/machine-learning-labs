@@ -20,9 +20,10 @@ def init_humidity():
 
 
 def init_pressure():
-    pressure = finput.FuzzyInputVariable('Pressure', 50, 100, 100)
-    pressure.add_triangular('Normal', 50, 65, 75)
-    pressure.add_triangular('Not normal', 80, 90, 100)
+    pressure = finput.FuzzyInputVariable('Pressure', 10, 50, 100)
+    pressure.add_triangular('Low', 10, 15, 20)
+    pressure.add_triangular('Normal', 25, 30, 35)
+    pressure.add_triangular('High', 40, 45, 50)
     return pressure
 
 
@@ -37,58 +38,68 @@ def init_living_condition():
 def init_system_with_fuzzy_rules(system: fsys.FuzzySystem):
     system.add_rule(
         {'Temperature': 'Cold',
-         'Humidity': 'Wet',
-         'Pressure': 'Not normal'
+         'Humidity': 'Dry',
+         'Pressure': 'High'
          },
         {'Living Condition': 'Bad'})
 
     system.add_rule(
         {'Temperature': 'Cold',
-         'Humidity': 'Normal',
-         'Pressure': 'Not normal'},
-        {'Living Condition': 'Bad'})
-
-    system.add_rule(
-        {'Temperature': 'Medium',
          'Humidity': 'Wet',
-         'Pressure': 'Normal'},
-        {'Living Condition': 'Good'})
-
-    system.add_rule(
-        {'Temperature': 'Medium',
-         'Humidity': 'Normal',
-         'Pressure': 'Normal'},
-        {'Living Condition': 'Good'})
+         'Pressure': 'High'
+         },
+        {'Living Condition': 'Normal'})
 
     system.add_rule(
         {'Temperature': 'Cold',
-         'Humidity': 'Dry',
-         'Pressure': 'Not normal'},
-        {'Living Condition': 'Bad'})
-
-    system.add_rule(
-        {'Temperature': 'Hot',
-         'Humidity': 'Wet',
-         'Pressure': 'Not normal'},
-        {'Living Condition': 'Normal'})
-
-    system.add_rule(
-        {'Temperature': 'Hot',
          'Humidity': 'Normal',
-         'Pressure': 'Not normal'},
-        {'Living Condition': 'Bad'})
+         'Pressure': 'High'
+         },
+        {'Living Condition': 'Good'})
 
     system.add_rule(
-        {'Temperature': 'Hot',
-         'Humidity': 'Dry',
-         'Pressure': 'Not normal'},
+        {'Temperature': 'Medium',
+         'Humidity': 'Wet',
+         'Pressure': 'Normal'
+         },
         {'Living Condition': 'Bad'})
 
     system.add_rule(
         {'Temperature': 'Medium',
+         'Humidity': 'Normal',
+         'Pressure': 'Normal'
+         },
+        {'Living Condition': 'Good'})
+
+    system.add_rule(
+        {'Temperature': 'Medium',
          'Humidity': 'Dry',
-         'Pressure': 'Normal'},
+         'Pressure': 'Normal'
+         },
+        {'Living Condition': 'Good'})
+
+    system.add_rule(
+        {'Temperature': 'Hot',
+         'Humidity': 'Dry',
+         'Pressure': 'Low'
+         },
+        {'Living Condition': 'Bad'})
+
+    system.add_rule(
+        {'Temperature': 'Hot',
+         'Humidity': 'Normal',
+         'Pressure': 'Low'
+         },
         {'Living Condition': 'Normal'})
+
+    system.add_rule(
+        {'Temperature': 'Hot',
+         'Humidity': 'Wet',
+         'Pressure': 'Low'
+         },
+        {'Living Condition': 'Good'})
+
+
 
 
 def main():
@@ -105,12 +116,14 @@ def main():
     init_system_with_fuzzy_rules(system)
 
     output = system.evaluate_output({
-        'Temperature': 18,
-        'Humidity': 60,
-        'Pressure': 65
+        'Temperature': 11,
+        'Humidity': 59,
+        'Pressure': 41
     })
 
     print(output)
+
+    system.plot_system()
 
 
 if __name__ == '__main__':
